@@ -69,7 +69,7 @@ func CalculateLog5KpWinProb(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTea
 	return htPW, atPw
 }
 
-func CalculateLog5KpPointMargin(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
+func CalculateLog5KpSpread(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
 	hTAdjO := ((homeTeam.AdjO + (homeTeam.AdjO * .014)) / 101.5)
 	hTAdjD := ((homeTeam.AdjD - (homeTeam.AdjD * .014)) / 101.5)
 	aTAdjO := ((awayTeam.AdjO - (awayTeam.AdjO * .014)) / 101.5)

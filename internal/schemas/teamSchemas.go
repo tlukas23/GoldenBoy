@@ -11,8 +11,8 @@ type KPTeamStats struct {
 
 type CsvTeamOdds struct {
 	TeamName  string
-	Spread    int
-	OverUnder int
+	Spread    float64
+	OverUnder float64
 	MoneyLine int
 }
 
@@ -21,9 +21,11 @@ type GoldenCopyRow struct {
 	WinPercentageLog5     string
 	PredictedPointsLog5   string
 	KpWinPercentage       string
-	KpPointMargin         string
+	KpSpread              string
 	Log5PredictedTotal    string
-	HardRockWinPercentage string
 	ExpectedMoneyLineLog5 string
 	ExpectedMoneyLineKp   string
+	VegasSpread           string
+	VegasOverUnder        string
+	VegasWinPercentage    string
 }
