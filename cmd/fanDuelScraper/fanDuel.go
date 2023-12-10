@@ -104,11 +104,11 @@ func main() {
 		row.AddCell().SetValue(game.AwayTeamName)
 		row.AddCell().SetFloat(game.AwayTeamSpread)
 		row.AddCell().SetFloat(game.OverUnder)
-		row.AddCell().SetValue("")
+		row.AddCell().SetValue(game.AwayTeamMl)
 		row.AddCell().SetValue(game.HomeTeamName)
 		row.AddCell().SetFloat(game.HomeTeamSpread)
 		row.AddCell().SetFloat(game.OverUnder)
-		row.AddCell().SetValue("")
+		row.AddCell().SetValue(game.HomeTeamMl)
 	}
 
 	// Save the Excel file
