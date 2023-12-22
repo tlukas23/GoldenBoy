@@ -104,33 +104,90 @@ func FDParser() ([]GameInfo, error) {
 
 		game.AwayTeamName = strings.Replace(game.AwayTeamName, "State", "St.", 1)
 		game.HomeTeamName = strings.Replace(game.HomeTeamName, "State", "St.", 1)
-		if game.AwayTeamName == "Miami" {
-			game.AwayTeamName = "Miami FL"
-		}
 
-		if game.HomeTeamName == "Miami" {
-			game.HomeTeamName = "Miami FL"
-		}
-
-		if game.AwayTeamName == "Ole Miss" {
-			game.AwayTeamName = "Mississippi"
-		}
-
-		if game.HomeTeamName == "Ole Miss" {
-			game.HomeTeamName = "Mississippi"
-		}
-
-		if game.AwayTeamName == "Nebraska Cornhuskers" {
-			game.AwayTeamName = "Nebraska"
-		}
-
-		if game.HomeTeamName == "Nebraska Cornhuskers" {
-			game.HomeTeamName = "Nebraska"
-		}
+		game.AwayTeamName = TeamNameOptionValidator(game.AwayTeamName)
+		game.HomeTeamName = TeamNameOptionValidator(game.HomeTeamName)
 
 		//log.Println(game)
 		games = append(games, game)
 	}
 
 	return games, nil
+}
+
+func TeamNameOptionValidator(name string) string {
+	if name == "Miami" {
+		return "Miami FL"
+	}
+	if name == "Ole Miss" {
+		return "Mississippi"
+	}
+	if name == "Nebraska Cornhuskers" {
+		return "Nebraska"
+	}
+	if name == "Pennsylvania" {
+		return "Penn"
+	}
+	if name == "CSU Northridge" {
+		return "Cal St. Northridge"
+	}
+	if name == "Long Island University" {
+		return "LIU"
+	}
+	if name == "California Baptist" {
+		return "Cal Baptist"
+	}
+	if name == "UIC" {
+		return "Illinois Chicago"
+	}
+	if name == "UL Monroe" {
+		return "Louisiana Monroe"
+	}
+	if name == "Arkansas-Pine Bluff" {
+		return "Arkansas Pine Bluff"
+	}
+	if name == "SE Louisiana" {
+		return "Southeastern Louisiana"
+	}
+	if name == "NC St." {
+		return "N.C. State"
+	}
+	if name == "UT Martin" {
+		return "Tennessee Martin"
+	}
+	if name == "Florida International" {
+		return "FIU"
+	}
+	if name == "McNeese" {
+		return "McNeese St."
+	}
+	if name == "WV Mountaineers" {
+		return "West Virginia"
+	}
+	if name == "Central Conn. St." {
+		return "Central Connecticut"
+	}
+	if name == "Southern Methodist" {
+		return "SMU"
+	}
+	if name == "Charlotte 49ers" {
+		return "Charlotte"
+	}
+	if name == "St Josephs" {
+		return "Saint Joseph's"
+	}
+	if name == "Citadel" {
+		return "The Citadel"
+	}
+	if name == "Gardner-Webb" {
+		return "Gardner Webb"
+	}
+	if name == "Nicholls" {
+		return "Nicholls St."
+	}
+	if name == "CSU Bakersfield" {
+		return "Cal St. Bakersfield"
+	}
+
+	return name
 }
