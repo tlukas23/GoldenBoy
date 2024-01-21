@@ -80,3 +80,20 @@ func CalculateLog5KpSpread(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeam
 
 	return (htExOp * .697), (atExOp * .697)
 }
+
+func BDDistSpread(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
+	hTAdjO := (homeTeam.AdjO + (homeTeam.AdjO * .014))
+	hTAdjD := (homeTeam.AdjD - (homeTeam.AdjD * .014))
+	aTAdjO := (awayTeam.AdjO - (awayTeam.AdjO * .014))
+	aTAdjD := (awayTeam.AdjD + (awayTeam.AdjD * .014))
+
+	poss := (homeTeam.AdjT * awayTeam.AdjT) / 69
+
+	htPPP := (hTAdjO * aTAdjD) / 101.5
+	atPPP := (aTAdjO * hTAdjD) / 101.5
+
+	htPoints := (htPPP * poss) / 101.5
+	atPoints := (atPPP * poss) / 101.5
+
+	return htPoints, atPoints
+}

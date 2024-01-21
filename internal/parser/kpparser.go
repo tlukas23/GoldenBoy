@@ -1,4 +1,4 @@
-package kpParser
+package parser
 
 import (
 	"fmt"

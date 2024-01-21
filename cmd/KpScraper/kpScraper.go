@@ -14,7 +14,7 @@ func main() {
 	filePath := "kpHtml.txt"
 	// Start a Selenium WebDriver server instance (you should have the server running)
 	const (
-		seleniumPath = "/home/tlukas/selenium/vendor/selenium-server.jar"
+		seleniumPath = "selenium/vendor/selenium-server.jar"
 		chromeBinary = "chrome-linux64/chrome"
 		chromeDriver = "chromedriver"
 		port         = 4445 // Default port for Selenium WebDriver

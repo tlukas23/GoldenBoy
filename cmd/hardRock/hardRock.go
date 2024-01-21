@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"time"
-
 	kpParser "tommy2thicc/internal/parser"
 
 	"github.com/tealeg/xlsx"
@@ -56,7 +55,7 @@ func main() {
 	defer wd.Quit()
 
 	// Navigate to the simple playground interface.
-	if err := wd.Get("https://sportsbook.fanduel.com/navigation/ncaab"); err != nil {
+	if err := wd.Get("https://app.hardrock.bet/sport-leagues/basketball/691032891339243522"); err != nil {
 		panic(err)
 	}
 
@@ -76,7 +75,7 @@ func main() {
 		return
 	}
 
-	gameOdds, err := kpParser.FDParser()
+	gameOdds, err := kpParser.HrParser()
 	if err != nil {
 		log.Fatal(err)
 	}

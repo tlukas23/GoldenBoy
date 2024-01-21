@@ -1,8 +1,7 @@
-package kpParser
+package parser
 
 import (
 	"fmt"
-	"html"
 	"log"
 	"os"
 	"regexp"
@@ -30,8 +29,8 @@ func FDParser() ([]GameInfo, error) {
 
 	htmlText := string(fileContent)
 
-	aTeamNameRegex := regexp.MustCompile(`"awayTeam"\s*:\s*{\s*"@type"\s*:\s*"SportsTeam",\s*"name"\s*:\s*"([^"]*)"\s*}`)
-	homeTeamRegex := regexp.MustCompile(`"homeTeam"\s*:\s*{\s*"@type"\s*:\s*"SportsTeam",\s*"name"\s*:\s*"([^"]*)"\s*}`)
+	aTeamNameRegex := regexp.MustCompile(`"awayTeam"\s*:\s*{\s*"[^"]*"\s*:\s*"[^"]*"\s*,\s*"name"\s*:\s*"(.*?)"\s*}`)
+	homeTeamRegex := regexp.MustCompile(`"homeTeam"\s*:\s*{\s*"[^"]*"\s*:\s*"[^"]*"\s*,\s*"name"\s*:\s*"(.*?)"\s*}`)
 
 	aTeamMatches := aTeamNameRegex.FindAllStringSubmatch(htmlText, -1)
 	hTeamMatches := homeTeamRegex.FindAllStringSubmatch(htmlText, -1)
@@ -44,14 +43,15 @@ func FDParser() ([]GameInfo, error) {
 			HomeTeamName: hTeamMatches[i][1],
 		}
 
-		aTregexPattern := fmt.Sprintf(`aria-label="%s, (-?\d+\.?\d*),`, html.EscapeString(game.AwayTeamName))
-		hTregexPattern := fmt.Sprintf(`aria-label="%s, (-?\d+\.?\d*),`, html.EscapeString(game.HomeTeamName))
+		aTregexPattern := fmt.Sprintf(`aria-label="%s, (-?\d+\.?\d*),`, game.AwayTeamName)
+		hTregexPattern := fmt.Sprintf(`aria-label="%s, (-?\d+\.?\d*),`, game.HomeTeamName)
 		reAt := regexp.MustCompile(aTregexPattern)
 		aTmatches := reAt.FindAllStringSubmatch(htmlText, -1)
 		reHt := regexp.MustCompile(hTregexPattern)
 		hTmatches := reHt.FindAllStringSubmatch(htmlText, -1)
 
 		if len(aTmatches) == 0 || len(hTmatches) == 0 {
+			log.Println(game.AwayTeamName, game.HomeTeamName)
 			log.Println("No spread available for team game", game.AwayTeamName, "@", game.HomeTeamName)
 			continue
 		}
@@ -66,7 +66,7 @@ func FDParser() ([]GameInfo, error) {
 			return nil, fmt.Errorf("error parsing Home Team Spread value: %w", err)
 		}
 
-		overUnderpattern := fmt.Sprintf(`%s.*?Over (\d+\.\d+).*`, html.EscapeString(game.AwayTeamName))
+		overUnderpattern := fmt.Sprintf(`%s.*?Over (\d+\.\d+).*`, game.AwayTeamName)
 		reOU := regexp.MustCompile(overUnderpattern)
 		ouMatches := reOU.FindAllStringSubmatch(htmlText, -1)
 
@@ -80,8 +80,8 @@ func FDParser() ([]GameInfo, error) {
 		}
 		game.OverUnder = overUnder
 
-		htMlregex := fmt.Sprintf(`aria-label="%s, ([+-]?\d+(\.\d+)?) Odds"`, html.EscapeString(game.HomeTeamName))
-		atMlregex := fmt.Sprintf(`aria-label="%s, ([+-]?\d+(\.\d+)?) Odds"`, html.EscapeString(game.AwayTeamName))
+		htMlregex := fmt.Sprintf(`aria-label="%s, ([+-]?\d+(\.\d+)?) Odds"`, game.HomeTeamName)
+		atMlregex := fmt.Sprintf(`aria-label="%s, ([+-]?\d+(\.\d+)?) Odds"`, game.AwayTeamName)
 		reAtMl := regexp.MustCompile(atMlregex)
 		aTMlmatches := reAtMl.FindAllStringSubmatch(htmlText, -1)
 		reHtMl := regexp.MustCompile(htMlregex)
@@ -113,81 +113,4 @@ func FDParser() ([]GameInfo, error) {
 	}
 
 	return games, nil
-}
-
-func TeamNameOptionValidator(name string) string {
-	if name == "Miami" {
-		return "Miami FL"
-	}
-	if name == "Ole Miss" {
-		return "Mississippi"
-	}
-	if name == "Nebraska Cornhuskers" {
-		return "Nebraska"
-	}
-	if name == "Pennsylvania" {
-		return "Penn"
-	}
-	if name == "CSU Northridge" {
-		return "Cal St. Northridge"
-	}
-	if name == "Long Island University" {
-		return "LIU"
-	}
-	if name == "California Baptist" {
-		return "Cal Baptist"
-	}
-	if name == "UIC" {
-		return "Illinois Chicago"
-	}
-	if name == "UL Monroe" {
-		return "Louisiana Monroe"
-	}
-	if name == "Arkansas-Pine Bluff" {
-		return "Arkansas Pine Bluff"
-	}
-	if name == "SE Louisiana" {
-		return "Southeastern Louisiana"
-	}
-	if name == "NC St." {
-		return "N.C. State"
-	}
-	if name == "UT Martin" {
-		return "Tennessee Martin"
-	}
-	if name == "Florida International" {
-		return "FIU"
-	}
-	if name == "McNeese" {
-		return "McNeese St."
-	}
-	if name == "WV Mountaineers" {
-		return "West Virginia"
-	}
-	if name == "Central Conn. St." {
-		return "Central Connecticut"
-	}
-	if name == "Southern Methodist" {
-		return "SMU"
-	}
-	if name == "Charlotte 49ers" {
-		return "Charlotte"
-	}
-	if name == "St Josephs" {
-		return "Saint Joseph's"
-	}
-	if name == "Citadel" {
-		return "The Citadel"
-	}
-	if name == "Gardner-Webb" {
-		return "Gardner Webb"
-	}
-	if name == "Nicholls" {
-		return "Nicholls St."
-	}
-	if name == "CSU Bakersfield" {
-		return "Cal St. Bakersfield"
-	}
-
-	return name
 }

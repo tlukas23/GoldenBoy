@@ -1,11 +1,11 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"log"
 	"os"
+	"strconv"
 	"time"
-
 	kpParser "tommy2thicc/internal/parser"
 
 	"github.com/tealeg/xlsx"
@@ -13,16 +13,12 @@ import (
 	"github.com/tebeka/selenium/chrome"
 )
 
-type Game struct {
-	AwayTeam   string
-	OverUnder  string
-	HomeTeam   string
-	HomeSpread string
-	AwaySpread string
-}
-
 func main() {
-	filePath := "oddsHtml.txt"
+	var input string
+	flag.StringVar(&input, "date", "", "HTML string to parse")
+	flag.Parse()
+
+	filePath := "espnHtml.txt"
 	const (
 		seleniumPath = "selenium/vendor/selenium-server.jar"
 		chromeBinary = "chrome-linux64/chrome"
@@ -37,6 +33,10 @@ func main() {
 
 	chromeOpts := chrome.Capabilities{
 		Path: chromeBinary,
+		Args: []string{
+			"--headless", // Run in headless mode
+			"--disable-gpu",
+		},
 	}
 
 	selenium.SetDebug(true)
@@ -55,13 +55,19 @@ func main() {
 	}
 	defer wd.Quit()
 
-	// Navigate to the simple playground interface.
-	if err := wd.Get("https://sportsbook.fanduel.com/navigation/ncaab"); err != nil {
-		panic(err)
+	if input != "" {
+		if err := wd.Get("https://www.cbssports.com/college-basketball/scoreboard/FBS/" + input); err != nil {
+			panic(err)
+		}
+	} else {
+		// Navigate to the simple playground interface.
+		if err := wd.Get("https://www.cbssports.com/college-basketball/scoreboard/"); err != nil {
+			panic(err)
+		}
 	}
 
 	// Wait for a brief moment for the page to load (adjust this as needed)
-	time.Sleep(5 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	// Get the page source (HTML content)
 	htmlContent, err := wd.PageSource()
@@ -76,10 +82,8 @@ func main() {
 		return
 	}
 
-	gameOdds, err := kpParser.FDParser()
-	if err != nil {
-		log.Fatal(err)
-	}
+	teams := kpParser.ParseHTML()
+	fmt.Println(teams)
 
 	file := xlsx.NewFile()
 	sheet, err := file.AddSheet("Games")
@@ -88,31 +92,58 @@ func main() {
 		return
 	}
 
-	// Add header row
-	header := sheet.AddRow()
-	header.AddCell().SetValue("Away Team")
-	header.AddCell().SetValue("Away Spread")
-	header.AddCell().SetValue("Over/Under")
-	header.AddCell().SetValue("Away ML Odds")
-	header.AddCell().SetValue("Home Team")
-	header.AddCell().SetValue("Home Spread")
-	header.AddCell().SetValue("Over/Under")
-	header.AddCell().SetValue("Home ML Odds")
+	actualHeaders := []string{"Team", "Spread", "O/U", "Outcome"}
+	sheet.AddRow()
+	actual := sheet.AddRow()
+	for i, header := range actualHeaders {
+		cell := actual.AddCell()
+		style := xlsx.NewStyle()
+		style.Border.Bottom = "thin"
+		style.Font = *xlsx.NewFont(12, "Times New Roman")
+		if i == 0 {
+			style.Border.Right = "thick"
+		}
+		cell.Value = header
+		cell.SetStyle(style)
 
-	for _, game := range gameOdds {
+	}
+
+	for i, rowData := range teams {
+		style := xlsx.NewStyle()
+		style.Font = *xlsx.NewFont(11, "Times New Roman")
+
+		styleColumnLine := xlsx.NewStyle()
+		styleColumnLine.Font = *xlsx.NewFont(11, "Times New Roman")
+		styleColumnLine.Border.Right = "thick"
+		if i%2 == 1 {
+			style.Border.Bottom = "thin"
+			styleColumnLine.Border.Bottom = "thin"
+		}
 		row := sheet.AddRow()
-		row.AddCell().SetValue(game.AwayTeamName)
-		row.AddCell().SetFloat(game.AwayTeamSpread)
-		row.AddCell().SetFloat(game.OverUnder)
-		row.AddCell().SetValue(game.AwayTeamMl)
-		row.AddCell().SetValue(game.HomeTeamName)
-		row.AddCell().SetFloat(game.HomeTeamSpread)
-		row.AddCell().SetFloat(game.OverUnder)
-		row.AddCell().SetValue(game.HomeTeamMl)
+
+		cell := row.AddCell()
+		cell.Value = rowData.Name
+		cell.SetStyle(styleColumnLine)
+
+		cell = row.AddCell()
+		cell.Value = strconv.Itoa(rowData.Spread)
+		cell.SetStyle(style)
+
+		cell = row.AddCell()
+		cell.Value = strconv.Itoa(rowData.Total)
+		cell.SetStyle(style)
+
+		cell = row.AddCell()
+		if rowData.Win {
+			cell.Value = "W"
+		} else {
+			cell.Value = "L"
+		}
+		cell.SetStyle(style)
 	}
 
 	// Save the Excel file
-	err = file.Save("games.xlsx")
+	err = file.Save("outcomes.xlsx")
 	if err != nil {
 		fmt.Println("Error saving file:", err)
 		return

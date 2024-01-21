@@ -136,52 +136,6 @@ func main() {
 		cell.SetStyle(style)
 	}
 
-	actualHeaders := []string{"Team", "Spread", "O/U", "Outcome"}
-	sheet.AddRow()
-	actual := sheet.AddRow()
-	for i, header := range actualHeaders {
-		cell := actual.AddCell()
-		style := xlsx.NewStyle()
-		style.Border.Bottom = "thin"
-		style.Font = *xlsx.NewFont(12, "Times New Roman")
-		if i == 0 {
-			style.Border.Right = "thick"
-		}
-		cell.Value = header
-		cell.SetStyle(style)
-
-	}
-
-	for i, rowData := range goldenRows {
-		style := xlsx.NewStyle()
-		style.Font = *xlsx.NewFont(11, "Times New Roman")
-
-		styleColumnLine := xlsx.NewStyle()
-		styleColumnLine.Font = *xlsx.NewFont(11, "Times New Roman")
-		styleColumnLine.Border.Right = "thick"
-		if i%2 == 1 {
-			style.Border.Bottom = "thin"
-			styleColumnLine.Border.Bottom = "thin"
-		}
-		row := sheet.AddRow()
-
-		cell := row.AddCell()
-		cell.Value = rowData.Name
-		cell.SetStyle(styleColumnLine)
-
-		cell = row.AddCell()
-		cell.SetValue("")
-		cell.SetStyle(style)
-
-		cell = row.AddCell()
-		cell.SetValue("")
-		cell.SetStyle(style)
-
-		cell = row.AddCell()
-		cell.SetValue("")
-		cell.SetStyle(style)
-	}
-
 	// Save the XLSX file
 	err = excelFile.Save("GoldenBoy.xlsx")
 	if err != nil {

@@ -28,7 +28,8 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 
 		htHRWp, atHRWp := oddsCalc.HouseProbs(int(htOdds.MoneyLine), int(atOdds.MoneyLine))
 		htLog5Wp, atLog5Wp := oddsCalc.CalculateLog5KpWinProb(htStats, atStats)
-		htLog5PredPts, atLog5PredPts := oddsCalc.CalculateLog5KpSpread(htStats, atStats)
+		//htLog5PredPts, atLog5PredPts := oddsCalc.CalculateLog5KpSpread(htStats, atStats)
+		htLog5PredPts, atLog5PredPts := oddsCalc.BDDistSpread(htStats, atStats)
 		totalPointsPred := htLog5PredPts + atLog5PredPts
 		htKpPointDiff, atKpPointDiff := oddsCalc.CalculateKPPointDiff(htStats, atStats)
 		htKpWp := oddsCalc.CalculateKPWinProb(htKpPointDiff)
@@ -41,7 +42,6 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 		atLog5MlExpect := oddsCalc.ExpectedValFunc(atLog5Wp, atPayoutMl, 5)
 		htKpMlExpect := oddsCalc.ExpectedValFunc(htKpWp, htPayoutMl, 5)
 		atKpMlExpect := oddsCalc.ExpectedValFunc(atKpWp, atPayoutMl, 5)
-
 		kpHtPointSpread := htKpPointDiff * -1
 		kpAtPointSpread := atKpPointDiff * -1
 
