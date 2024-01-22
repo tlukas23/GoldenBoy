@@ -18,14 +18,14 @@ type CsvTeamOdds struct {
 
 type GoldenCopyRow struct {
 	Name                  string
-	WinPercentageLog5     string
-	PredictedPointsLog5   string
-	KpWinPercentage       string
-	KpSpread              string
-	Log5PredictedTotal    string
-	ExpectedMoneyLineLog5 string
-	ExpectedMoneyLineKp   string
-	VegasSpread           string
-	VegasOverUnder        string
-	VegasWinPercentage    string
+	WinPercentageLog5     float64
+	PredictedPointsLog5   float64
+	KpWinPercentage       float64
+	KpSpread              float64
+	Log5PredictedTotal    float64
+	ExpectedMoneyLineLog5 float64
+	ExpectedMoneyLineKp   float64
+	VegasSpread           float64
+	VegasOverUnder        float64
+	VegasWinPercentage    float64
 }

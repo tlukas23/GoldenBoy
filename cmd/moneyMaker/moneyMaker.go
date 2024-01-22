@@ -72,67 +72,77 @@ func main() {
 	}
 
 	for i, rowData := range goldenRows {
-		style := xlsx.NewStyle()
-		style.Font = *xlsx.NewFont(11, "Times New Roman")
-
-		styleColumnLine := xlsx.NewStyle()
-		styleColumnLine.Font = *xlsx.NewFont(11, "Times New Roman")
-		styleColumnLine.Border.Right = "thick"
-		if i%2 == 1 {
-			style.Border.Bottom = "thin"
-			styleColumnLine.Border.Bottom = "thin"
-		}
 		row := sheet.AddRow()
 
+		cellName := row.AddCell()
+		cellName.Value = rowData.Name
+		style := styleCell(i, true, false)
+		cellName.SetStyle(style)
+
+		mlLog := row.AddCell()
+		mlLog.SetValue(rowData.ExpectedMoneyLineLog5)
+		style = styleCell(i, false, false)
+		mlLog.SetStyle(style)
+
+		mlKp := row.AddCell()
+		mlKp.SetValue(rowData.ExpectedMoneyLineKp)
+		style = styleCell(i, true, false)
+		mlKp.SetStyle(style)
+
+		ppLog := row.AddCell()
+		ppLog.SetValue(rowData.PredictedPointsLog5)
+		style = styleCell(i, false, false)
+		ppLog.SetStyle(style)
+
+		kpSpread := row.AddCell()
+		kpSpread.SetValue(rowData.KpSpread)
+		if rowData.KpSpread > rowData.VegasSpread+4 || rowData.KpSpread < rowData.VegasSpread-4 {
+			style = styleCell(i, false, true)
+		} else {
+			style = styleCell(i, false, false)
+		}
+		kpSpread.SetStyle(style)
+
+		log5Predi := row.AddCell()
+		log5Predi.SetValue(rowData.Log5PredictedTotal)
+		if rowData.Log5PredictedTotal > rowData.VegasOverUnder+5 || rowData.Log5PredictedTotal < rowData.VegasOverUnder-5 {
+			style = styleCell(i, true, true)
+		} else {
+			style = styleCell(i, true, false)
+		}
+		log5Predi.SetStyle(style)
+
+		wpLog5 := row.AddCell()
+		wpLog5.SetValue(rowData.WinPercentageLog5)
+		style = styleCell(i, false, false)
+		wpLog5.SetStyle(style)
+
+		kpWinPer := row.AddCell()
+		kpWinPer.SetValue(rowData.KpWinPercentage)
+		style = styleCell(i, false, false)
+		kpWinPer.SetStyle(style)
+
 		cell := row.AddCell()
-		cell.Value = rowData.Name
-		cell.SetStyle(styleColumnLine)
-
-		cell = row.AddCell()
-		cell.SetValue(rowData.ExpectedMoneyLineLog5)
-		cell.SetStyle(style)
-
-		cell = row.AddCell()
-		cell.SetValue(rowData.ExpectedMoneyLineKp)
-		cell.SetStyle(styleColumnLine)
-
-		cell = row.AddCell()
-		cell.SetValue(rowData.PredictedPointsLog5)
-		cell.SetStyle(style)
-
-		cell = row.AddCell()
-		cell.SetValue(rowData.KpSpread)
-		cell.SetStyle(style)
-
-		cell = row.AddCell()
-		cell.SetValue(rowData.Log5PredictedTotal)
-		cell.SetStyle(styleColumnLine)
-
-		cell = row.AddCell()
-		cell.SetValue(rowData.WinPercentageLog5)
-		cell.SetStyle(style)
-
-		cell = row.AddCell()
-		cell.SetValue(rowData.KpWinPercentage)
-		cell.SetStyle(style)
-
-		cell = row.AddCell()
 		cell.Value = ""
 
 		cell = row.AddCell()
 		cell.Value = rowData.Name
-		cell.SetStyle(styleColumnLine)
+		style = styleCell(i, true, false)
+		cell.SetStyle(style)
 
 		cell = row.AddCell()
 		cell.SetValue(rowData.VegasSpread)
+		style = styleCell(i, false, false)
 		cell.SetStyle(style)
 
 		cell = row.AddCell()
 		cell.SetValue(rowData.VegasOverUnder)
+		style = styleCell(i, false, false)
 		cell.SetStyle(style)
 
 		cell = row.AddCell()
 		cell.SetValue(rowData.VegasWinPercentage)
+		style = styleCell(i, false, false)
 		cell.SetStyle(style)
 	}
 
@@ -142,4 +152,21 @@ func main() {
 		fmt.Println("Error saving file:", err)
 		return
 	}
+}
+
+func styleCell(i int, colLine bool, colorCell bool) *xlsx.Style {
+	style := xlsx.NewStyle()
+	style.Font = *xlsx.NewFont(11, "Times New Roman")
+	if colLine {
+		style.Border.Right = "thick"
+	}
+
+	if i%2 == 1 {
+		style.Border.Bottom = "thin"
+	}
+
+	if colorCell {
+		style.Fill = *xlsx.FillGreen
+	}
+	return style
 }

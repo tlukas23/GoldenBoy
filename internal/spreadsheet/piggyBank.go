@@ -2,7 +2,6 @@ package spreadsheet
 
 import (
 	"log"
-	"strconv"
 	"tommy2thicc/internal/oddsCalc"
 	"tommy2thicc/internal/schemas"
 )
@@ -47,30 +46,30 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 
 		htRow := schemas.GoldenCopyRow{
 			Name:                  htOdds.TeamName,
-			VegasWinPercentage:    strconv.FormatFloat(htHRWp, 'f', -1, 64),
-			WinPercentageLog5:     strconv.FormatFloat(htLog5Wp, 'f', -1, 64),
-			PredictedPointsLog5:   strconv.FormatFloat(htLog5PredPts, 'f', -1, 64),
-			KpWinPercentage:       strconv.FormatFloat(htKpWp, 'f', -1, 64),
-			KpSpread:              strconv.FormatFloat(kpHtPointSpread, 'f', -1, 64),
-			ExpectedMoneyLineLog5: strconv.FormatFloat(htLog5MlExpect, 'f', -1, 64),
-			ExpectedMoneyLineKp:   strconv.FormatFloat(htKpMlExpect, 'f', -1, 64),
-			Log5PredictedTotal:    strconv.FormatFloat(totalPointsPred, 'f', -1, 64),
-			VegasSpread:           strconv.FormatFloat(htOdds.Spread, 'f', -1, 64),
-			VegasOverUnder:        strconv.FormatFloat(htOdds.OverUnder, 'f', -1, 64),
+			VegasWinPercentage:    htHRWp,
+			WinPercentageLog5:     htLog5Wp,
+			PredictedPointsLog5:   htLog5PredPts,
+			KpWinPercentage:       htKpWp,
+			KpSpread:              kpHtPointSpread,
+			ExpectedMoneyLineLog5: htLog5MlExpect,
+			ExpectedMoneyLineKp:   htKpMlExpect,
+			Log5PredictedTotal:    totalPointsPred,
+			VegasSpread:           htOdds.Spread,
+			VegasOverUnder:        htOdds.OverUnder,
 		}
 
 		atRow := schemas.GoldenCopyRow{
 			Name:                  atOdds.TeamName,
-			VegasWinPercentage:    strconv.FormatFloat(atHRWp, 'f', -1, 64),
-			WinPercentageLog5:     strconv.FormatFloat(atLog5Wp, 'f', -1, 64),
-			PredictedPointsLog5:   strconv.FormatFloat(atLog5PredPts, 'f', -1, 64),
-			KpWinPercentage:       strconv.FormatFloat(atKpWp, 'f', -1, 64),
-			KpSpread:              strconv.FormatFloat(kpAtPointSpread, 'f', -1, 64),
-			ExpectedMoneyLineLog5: strconv.FormatFloat(atLog5MlExpect, 'f', -1, 64),
-			ExpectedMoneyLineKp:   strconv.FormatFloat(atKpMlExpect, 'f', -1, 64),
-			Log5PredictedTotal:    strconv.FormatFloat(totalPointsPred, 'f', -1, 64),
-			VegasSpread:           strconv.FormatFloat(atOdds.Spread, 'f', -1, 64),
-			VegasOverUnder:        strconv.FormatFloat(atOdds.OverUnder, 'f', -1, 64),
+			VegasWinPercentage:    atHRWp,
+			WinPercentageLog5:     atLog5Wp,
+			PredictedPointsLog5:   atLog5PredPts,
+			KpWinPercentage:       atKpWp,
+			KpSpread:              kpAtPointSpread,
+			ExpectedMoneyLineLog5: atLog5MlExpect,
+			ExpectedMoneyLineKp:   atKpMlExpect,
+			Log5PredictedTotal:    totalPointsPred,
+			VegasSpread:           atOdds.Spread,
+			VegasOverUnder:        atOdds.OverUnder,
 		}
 
 		goldenRows = append(goldenRows, atRow)

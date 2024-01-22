@@ -4,7 +4,7 @@ import "strings"
 
 func TeamNameOptionValidator(name string) string {
 	name = strings.Replace(name, "State", "St.", 1)
-
+	name = strings.Replace(name, "&amp;", "&", -1)
 	if name == "Miami" {
 		return "Miami FL"
 	}
@@ -23,8 +23,20 @@ func TeamNameOptionValidator(name string) string {
 	if name == "Long Island" {
 		return "LIU"
 	}
+	if name == "Texas A&M–Commerce" {
+		return "Texas A&M Commerce"
+	}
+	if name == "Texas A&M-Corpus Christi" {
+		return "Texas A&M Corpus Chris"
+	}
+	if name == "Bethune-Cookman" {
+		return "Bethune Cookman"
+	}
 	if name == "California Baptist" {
 		return "Cal Baptist"
+	}
+	if name == "Mississippi Valley" {
+		return "Mississippi Valley St."
 	}
 	if name == "UIC" {
 		return "Illinois Chicago"
