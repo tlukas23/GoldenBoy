@@ -3,9 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"time"
 	kpParser "tommy2thicc/internal/parser"
 
 	"github.com/tealeg/xlsx"
+	"github.com/tebeka/selenium"
+	"github.com/tebeka/selenium/chrome"
 )
 
 type Game struct {
@@ -17,63 +21,63 @@ type Game struct {
 }
 
 func main() {
-	// filePath := "oddsHtml.txt"
-	// const (
-	// 	seleniumPath = "selenium/vendor/selenium-server.jar"
-	// 	chromeBinary = "chrome-linux64/chrome"
-	// 	chromeDriver = "chromedriver"
-	// 	port         = 4445 // Default port for Selenium WebDriver
-	// )
+	filePath := "oddsHtml.txt"
+	const (
+		seleniumPath = "selenium/vendor/selenium-server.jar"
+		chromeBinary = "chrome-linux64/chrome"
+		chromeDriver = "chromedriver"
+		port         = 4445 // Default port for Selenium WebDriver
+	)
 
-	// opts := []selenium.ServiceOption{
-	// 	selenium.StartFrameBuffer(),         // Start an X frame buffer for the browser to run in.
-	// 	selenium.ChromeDriver(chromeDriver), // Specify the path to GeckoDriver in order to use Firefox.
-	// }
+	opts := []selenium.ServiceOption{
+		selenium.StartFrameBuffer(),         // Start an X frame buffer for the browser to run in.
+		selenium.ChromeDriver(chromeDriver), // Specify the path to GeckoDriver in order to use Firefox.
+	}
 
-	// chromeOpts := chrome.Capabilities{
-	// 	Path: chromeBinary,
-	// }
+	chromeOpts := chrome.Capabilities{
+		Path: chromeBinary,
+	}
 
-	// selenium.SetDebug(true)
-	// service, err := selenium.NewSeleniumService(seleniumPath, port, opts...)
-	// if err != nil {
-	// 	panic(err) // panic is used only as an example and is not otherwise recommended.
-	// }
-	// defer service.Stop()
+	selenium.SetDebug(true)
+	service, err := selenium.NewSeleniumService(seleniumPath, port, opts...)
+	if err != nil {
+		panic(err) // panic is used only as an example and is not otherwise recommended.
+	}
+	defer service.Stop()
 
-	// // Connect to the WebDriver instance running locally.
-	// caps := selenium.Capabilities{"browserName": "chrome"}
-	// caps.AddChrome(chromeOpts)
-	// wd, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d/wd/hub", port))
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer wd.Quit()
+	// Connect to the WebDriver instance running locally.
+	caps := selenium.Capabilities{"browserName": "chrome"}
+	caps.AddChrome(chromeOpts)
+	wd, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d/wd/hub", port))
+	if err != nil {
+		panic(err)
+	}
+	defer wd.Quit()
 
-	// if err := wd.ResizeWindow("", 8000, 8000); err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err := wd.ResizeWindow("", 8000, 8000); err != nil {
+		log.Fatal(err)
+	}
 
-	// // Navigate to the simple playground interface.
-	// if err := wd.Get("https://app.hardrock.bet/sport-leagues/basketball/691032891339243522"); err != nil {
-	// 	panic(err)
-	// }
+	// Navigate to the simple playground interface.
+	if err := wd.Get("https://app.hardrock.bet/sport-leagues/basketball/691032891339243522"); err != nil {
+		panic(err)
+	}
 
-	// // Wait for a brief moment for the page to load (adjust this as needed)
-	// time.Sleep(5 * time.Second)
+	// Wait for a brief moment for the page to load (adjust this as needed)
+	time.Sleep(5 * time.Second)
 
-	// // Get the page source (HTML content)
-	// htmlContent, err := wd.PageSource()
-	// if err != nil {
-	// 	fmt.Println("Failed to get page source:", err)
-	// 	return
-	// }
+	// Get the page source (HTML content)
+	htmlContent, err := wd.PageSource()
+	if err != nil {
+		fmt.Println("Failed to get page source:", err)
+		return
+	}
 
-	// err = os.WriteFile(filePath, []byte(htmlContent), 0644)
-	// if err != nil {
-	// 	fmt.Println("Error writing to file:", err)
-	// 	return
-	// }
+	err = os.WriteFile(filePath, []byte(htmlContent), 0644)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return
+	}
 
 	gameOdds, err := kpParser.HrParser()
 	if err != nil {
