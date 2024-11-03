@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -18,8 +19,8 @@ func HrParser() ([]GameInfo, error) {
 
 	htmlSnippet := string(fileContent)
 	// Regex patterns for extracting information
-	awayTeamPattern := `<div class="show-for-medsmall">#?\d*\s*(.*?)</div>`
-	homeTeamPattern := `<div class="show-for-medsmall">#?\d*\s*(.*?)</div>`
+	awayTeamPattern := `<div class="show-for-medsmall">\d*\s*(.*?)</div>`
+	homeTeamPattern := `<div class="show-for-medsmall">\d*\s*(.*?)</div>`
 	spreadPattern := `<div class="column selection-line-value small-24 xxlarge-expand">\s*([+-]?\d+\.\d+)\s*</div>`
 	overUnderPattern := `<div class="row selection-container selection-container-vertical " data-cy="wager-button:Total Points (Over|Under)" data-tooltip-id="\d+-\d+"><div class="column selection-line-value small-24 xxlarge-expand">\s*[OU]\s*(\d+\.\d+)\s*</div><div class="column selection-odds xxlarge-13 ">(-?\d+)</div></div>`
 	moneyLinePattern := `<div class="row selection-container selection-container-vertical " data-cy="wager-button:To Win [AB]" data-tooltip-id="\d+-\d+"><div class="column selection-odds small-24 center-text">([+-]?\d+)</div></div>`
@@ -29,6 +30,7 @@ func HrParser() ([]GameInfo, error) {
 	re := regexp.MustCompile(`<div class="row hr-market-view ".*?class="row infoBoxContainer"`)
 	matches := re.FindAllString(htmlSnippet, -1)
 	for _, match := range matches {
+		//log.Println(match)
 		// Extract away team name
 		awayTeamRegex := regexp.MustCompile(awayTeamPattern)
 		awayTeamMatches := awayTeamRegex.FindAllStringSubmatch(match, -1)
@@ -61,6 +63,7 @@ func HrParser() ([]GameInfo, error) {
 			awayTeamSpread, _ = strconv.ParseFloat(spreadMatches[0][1], 64)
 			homeTeamSpread, _ = strconv.ParseFloat(spreadMatches[1][1], 64)
 		} else {
+			log.Println("huh1")
 			continue
 		}
 		game.AwayTeamSpread = awayTeamSpread
@@ -73,6 +76,7 @@ func HrParser() ([]GameInfo, error) {
 		if len(overUnderMatches) > 0 && len(overUnderMatches[0]) >= 3 {
 			overUnderValue, _ = strconv.ParseFloat(overUnderMatches[0][2], 64)
 		} else {
+			log.Println("huh")
 			continue
 		}
 		game.OverUnder = overUnderValue

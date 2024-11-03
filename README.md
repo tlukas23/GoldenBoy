@@ -25,3 +25,8 @@
     ```
     go build cmd/moneyMaker/moneyMaker.go && ./moneyMaker
     ```
+* Compile and run PonyBoy (Discord Bot):
+    Make sure you have a .env file with the bot token in it
+    ```
+     go build cmd/ponyBoy/ponyBoy.go && ./ponyBoy
+    ```

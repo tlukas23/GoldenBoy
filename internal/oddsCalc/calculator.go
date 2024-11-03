@@ -48,7 +48,7 @@ func CalculateKPPointDiff(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamS
 	hTpointDiff := ((homeTeam.Adjem - awayTeam.Adjem) * (awayTeam.AdjT + homeTeam.AdjT)) / 200
 	aTpointDiff := ((awayTeam.Adjem - homeTeam.Adjem) * (awayTeam.AdjT + homeTeam.AdjT)) / 200
 
-	return (hTpointDiff + 3.75), (aTpointDiff - 3.75)
+	return hTpointDiff, aTpointDiff
 }
 
 func CalculateKPWinProb(marginDiff float64) float64 {

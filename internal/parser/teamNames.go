@@ -50,6 +50,12 @@ func TeamNameOptionValidator(name string) string {
 	if name == "SE Louisiana" {
 		return "Southeastern Louisiana"
 	}
+	if name == "UConn" {
+		return "Connecticut"
+	}
+	if name == "College of Charleston" {
+		return "Charleston"
+	}
 	if name == "NC St." {
 		return "N.C. State"
 	}
