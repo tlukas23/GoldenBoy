@@ -22,6 +22,7 @@ type GoldenCopyRow struct {
 	PredictedPointsLog5   float64
 	KpWinPercentage       float64
 	KpSpread              float64
+	Log5Spread            float64
 	Log5PredictedTotal    float64
 	ExpectedMoneyLineLog5 float64
 	ExpectedMoneyLineKp   float64

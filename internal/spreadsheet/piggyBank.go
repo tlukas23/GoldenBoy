@@ -27,7 +27,8 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 
 		htHRWp, atHRWp := oddsCalc.HouseProbs(int(htOdds.MoneyLine), int(atOdds.MoneyLine))
 		htLog5Wp, atLog5Wp := oddsCalc.CalculateLog5KpWinProb(htStats, atStats)
-		//htLog5PredPts, atLog5PredPts := oddsCalc.CalculateLog5KpSpread(htStats, atStats)
+
+		atLog5Spread, htLog5Spread := oddsCalc.CalculateLog5KpSpread(htStats, atStats)
 		htLog5PredPts, atLog5PredPts := oddsCalc.BDDistSpread(htStats, atStats)
 		totalPointsPred := htLog5PredPts + atLog5PredPts
 		htKpPointDiff, atKpPointDiff := oddsCalc.CalculateKPPointDiff(htStats, atStats)
@@ -46,7 +47,7 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 
 		htRow := schemas.GoldenCopyRow{
 			Name:                  htOdds.TeamName,
-			VegasWinPercentage:    htHRWp,
+			VegasWinPercentage:    htHRWp * 100,
 			WinPercentageLog5:     htLog5Wp,
 			PredictedPointsLog5:   htLog5PredPts,
 			KpWinPercentage:       htKpWp,
@@ -56,11 +57,12 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 			Log5PredictedTotal:    totalPointsPred,
 			VegasSpread:           htOdds.Spread,
 			VegasOverUnder:        htOdds.OverUnder,
+			Log5Spread:            htLog5Spread,
 		}
 
 		atRow := schemas.GoldenCopyRow{
 			Name:                  atOdds.TeamName,
-			VegasWinPercentage:    atHRWp,
+			VegasWinPercentage:    atHRWp * 100,
 			WinPercentageLog5:     atLog5Wp,
 			PredictedPointsLog5:   atLog5PredPts,
 			KpWinPercentage:       atKpWp,
@@ -70,6 +72,7 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 			Log5PredictedTotal:    totalPointsPred,
 			VegasSpread:           atOdds.Spread,
 			VegasOverUnder:        atOdds.OverUnder,
+			Log5Spread:            atLog5Spread,
 		}
 
 		goldenRows = append(goldenRows, atRow)

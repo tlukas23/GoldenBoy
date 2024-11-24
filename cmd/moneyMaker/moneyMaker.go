@@ -9,6 +9,12 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
+const (
+	StyleLightGreen = iota
+	StyleDarkGreen
+	StyleWhite
+)
+
 func main() {
 
 	teamStats, err := kpParser.ParseKenPomHtml()
@@ -49,22 +55,22 @@ func main() {
 		return
 	}
 
-	headers := []string{"Team", "Expected ML Log5", "Expected ML Kp",
-		"Predicted Points Log5", "Spread Kp", "Total Points Log5", "Log5 WP", "Kp WP", "", "Team", "Vegas Spread", "Vegas O/U", "Vegas WP"}
+	headers := []string{"Team",
+		"Predicted Points Log5", "Spread Kp", "Spread Log5", "Total Points Log5", "", "Team", "Vegas Spread", "Vegas O/U", "Vegas WP"}
 
 	headerRow := sheet.AddRow()
 	for i, header := range headers {
 		style := xlsx.NewStyle()
 		style.Border.Bottom = "thin"
 		style.Font = *xlsx.NewFont(12, "Times New Roman")
-		if i == 0 || i == 2 || i == 5 || i == 9 {
+		if i == 0 || i == 4 || i == 6 {
 			style.Border.Right = "thick"
 		}
 		cell := headerRow.AddCell()
 		cell.Value = header
 		cell.SetStyle(style)
 		// Set the column width to accommodate the content
-		if i != 8 {
+		if i != 5 {
 			sheet.SetColWidth(i, i, float64(13)) // Set the width for the first column (0-based index)
 		} else {
 			sheet.SetColWidth(i, i, float64(4)) // Set the width for the first column (0-based index)
@@ -76,73 +82,66 @@ func main() {
 
 		cellName := row.AddCell()
 		cellName.Value = rowData.Name
-		style := styleCell(i, true, false)
+		style := styleCell(i, true, StyleWhite)
 		cellName.SetStyle(style)
-
-		mlLog := row.AddCell()
-		mlLog.SetValue(rowData.ExpectedMoneyLineLog5)
-		style = styleCell(i, false, false)
-		mlLog.SetStyle(style)
-
-		mlKp := row.AddCell()
-		mlKp.SetValue(rowData.ExpectedMoneyLineKp)
-		style = styleCell(i, true, false)
-		mlKp.SetStyle(style)
 
 		ppLog := row.AddCell()
 		ppLog.SetValue(rowData.PredictedPointsLog5)
-		style = styleCell(i, false, false)
+		style = styleCell(i, false, StyleWhite)
 		ppLog.SetStyle(style)
 
 		kpSpread := row.AddCell()
 		kpSpread.SetValue(rowData.KpSpread)
-		if rowData.KpSpread > rowData.VegasSpread+3.75 || rowData.KpSpread < rowData.VegasSpread-3.75 {
-			style = styleCell(i, false, true)
+		if rowData.KpSpread < 0 && rowData.VegasSpread > 0 || rowData.KpSpread > 0 && rowData.VegasSpread < 0 {
+			style = styleCell(i, false, StyleDarkGreen)
+		} else if rowData.KpSpread > rowData.VegasSpread+5.5 || rowData.KpSpread < rowData.VegasSpread-5.5 {
+			style = styleCell(i, false, StyleLightGreen)
 		} else {
-			style = styleCell(i, false, false)
+			style = styleCell(i, false, StyleWhite)
 		}
 		kpSpread.SetStyle(style)
 
+		log5Spread := row.AddCell()
+		log5Spread.SetValue(rowData.Log5Spread)
+		if rowData.Log5Spread < 0 && rowData.VegasSpread > 0 || rowData.Log5Spread > 0 && rowData.VegasSpread < 0 {
+			style = styleCell(i, false, StyleDarkGreen)
+		} else if rowData.Log5Spread > rowData.VegasSpread+5.5 || rowData.Log5Spread < rowData.VegasSpread-5.5 {
+			style = styleCell(i, false, StyleLightGreen)
+		} else {
+			style = styleCell(i, false, StyleWhite)
+		}
+		log5Spread.SetStyle(style)
+
 		log5Predi := row.AddCell()
 		log5Predi.SetValue(rowData.Log5PredictedTotal)
-		if rowData.Log5PredictedTotal > rowData.VegasOverUnder+5 || rowData.Log5PredictedTotal < rowData.VegasOverUnder-5 {
-			style = styleCell(i, true, true)
+		if rowData.Log5PredictedTotal > rowData.VegasOverUnder+8 || rowData.Log5PredictedTotal < rowData.VegasOverUnder-8 {
+			style = styleCell(i, true, StyleLightGreen)
 		} else {
-			style = styleCell(i, true, false)
+			style = styleCell(i, true, StyleWhite)
 		}
 		log5Predi.SetStyle(style)
-
-		wpLog5 := row.AddCell()
-		wpLog5.SetValue(rowData.WinPercentageLog5)
-		style = styleCell(i, false, false)
-		wpLog5.SetStyle(style)
-
-		kpWinPer := row.AddCell()
-		kpWinPer.SetValue(rowData.KpWinPercentage)
-		style = styleCell(i, false, false)
-		kpWinPer.SetStyle(style)
 
 		cell := row.AddCell()
 		cell.Value = ""
 
 		cell = row.AddCell()
 		cell.Value = rowData.Name
-		style = styleCell(i, true, false)
+		style = styleCell(i, true, StyleWhite)
 		cell.SetStyle(style)
 
 		cell = row.AddCell()
 		cell.SetValue(rowData.VegasSpread)
-		style = styleCell(i, false, false)
+		style = styleCell(i, false, StyleWhite)
 		cell.SetStyle(style)
 
 		cell = row.AddCell()
 		cell.SetValue(rowData.VegasOverUnder)
-		style = styleCell(i, false, false)
+		style = styleCell(i, false, StyleWhite)
 		cell.SetStyle(style)
 
 		cell = row.AddCell()
 		cell.SetValue(rowData.VegasWinPercentage)
-		style = styleCell(i, false, false)
+		style = styleCell(i, false, StyleWhite)
 		cell.SetStyle(style)
 	}
 
@@ -154,7 +153,7 @@ func main() {
 	}
 }
 
-func styleCell(i int, colLine bool, colorCell bool) *xlsx.Style {
+func styleCell(i int, colLine bool, colorCell int) *xlsx.Style {
 	style := xlsx.NewStyle()
 	style.Font = *xlsx.NewFont(11, "Times New Roman")
 	if colLine {
@@ -165,8 +164,12 @@ func styleCell(i int, colLine bool, colorCell bool) *xlsx.Style {
 		style.Border.Bottom = "thin"
 	}
 
-	if colorCell {
+	switch colorCell {
+	case StyleLightGreen:
 		style.Fill = *xlsx.FillGreen
+	case StyleDarkGreen:
+		style.Fill = *xlsx.FillGreen
+		style.Fill.FgColor = "FFFFD966"
 	}
 	return style
 }
