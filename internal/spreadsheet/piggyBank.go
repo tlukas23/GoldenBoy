@@ -25,6 +25,10 @@ func AnalyzeTheSheet(spreadsheet [][]string, teamsStats map[string]schemas.KPTea
 			continue
 		}
 
+		a := oddsCalc.SimulateGame(htStats, atStats, 10000)
+		b := 100 - a
+		log.Printf("\n%v: %.2f\n%v: %.2f\n\n", htOdds.TeamName, a, atOdds.TeamName, b)
+
 		htHRWp, atHRWp := oddsCalc.HouseProbs(int(htOdds.MoneyLine), int(atOdds.MoneyLine))
 		htLog5Wp, atLog5Wp := oddsCalc.CalculateLog5KpWinProb(htStats, atStats)
 

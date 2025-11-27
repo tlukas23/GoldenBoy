@@ -33,6 +33,7 @@ func ParseKenPomHtml() (map[string]schemas.KPTeamStats, error) { // Read the HTM
 				AdjO:     extractFloatValue(cells[5]),
 				AdjD:     extractFloatValue(cells[7]),
 				AdjT:     extractFloatValue(cells[9]),
+				Luck:     extractFloatValue(cells[11]),
 			}
 			teamStats[teamStat.TeamName] = teamStat
 		}

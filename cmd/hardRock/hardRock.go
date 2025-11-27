@@ -63,7 +63,7 @@ func main() {
 		panic(err)
 	}
 
-	// Wait for a brief moment for the page to load (adjust this as needed)
+	// Wait for a brief moment for the page to load
 	time.Sleep(5 * time.Second)
 
 	// Get the page source (HTML content)

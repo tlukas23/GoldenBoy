@@ -7,6 +7,7 @@ type KPTeamStats struct {
 	AdjO     float64
 	AdjD     float64
 	AdjT     float64
+	Luck     float64
 }
 
 type CsvTeamOdds struct {
@@ -20,6 +21,7 @@ type GoldenCopyRow struct {
 	Name                  string
 	WinPercentageLog5     float64
 	PredictedPointsLog5   float64
+	SimulatedPercentage   float64
 	KpWinPercentage       float64
 	KpSpread              float64
 	Log5Spread            float64

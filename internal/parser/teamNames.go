@@ -114,6 +114,14 @@ func TeamNameOptionValidator(name string) string {
 		return "UC San Diego"
 	case "Nebraska-Omaha":
 		return "Nebraska Omaha"
+	case "St. Francis (PA)":
+		return "Saint Francis"
+	case "San Diego St":
+		return "San Diego St."
+	case "Omaha":
+		return "Nebraska Omaha"
+	case "SIU Edwardsville":
+		return "SIUE"
 	}
 
 	return name

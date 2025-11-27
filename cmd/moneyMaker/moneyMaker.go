@@ -94,7 +94,7 @@ func main() {
 		kpSpread.SetValue(rowData.KpSpread)
 		if rowData.KpSpread < 0 && rowData.VegasSpread > 0 || rowData.KpSpread > 0 && rowData.VegasSpread < 0 {
 			style = styleCell(i, false, StyleDarkGreen)
-		} else if rowData.KpSpread > rowData.VegasSpread+5.5 || rowData.KpSpread < rowData.VegasSpread-5.5 {
+		} else if rowData.KpSpread > rowData.VegasSpread+3.5 || rowData.KpSpread < rowData.VegasSpread-3.5 {
 			style = styleCell(i, false, StyleLightGreen)
 		} else {
 			style = styleCell(i, false, StyleWhite)

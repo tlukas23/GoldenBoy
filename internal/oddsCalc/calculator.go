@@ -38,12 +38,6 @@ func calculateDecimalOdds(odd int) float64 {
 	}
 }
 
-func CalculateEloProb(hTElo float64, atElo float64) (float64, float64) {
-	probHt := 1 / (1 + (math.Pow(10, ((atElo - (hTElo + 50)) / 400))))
-	probAt := 1 - probHt
-	return probHt, probAt
-}
-
 func CalculateKPPointDiff(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
 	hTpointDiff := ((homeTeam.Adjem - awayTeam.Adjem) * (awayTeam.AdjT + homeTeam.AdjT)) / 200
 	aTpointDiff := ((awayTeam.Adjem - homeTeam.Adjem) * (awayTeam.AdjT + homeTeam.AdjT)) / 200
@@ -56,10 +50,14 @@ func CalculateKPWinProb(marginDiff float64) float64 {
 }
 
 func CalculateLog5KpWinProb(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
-	hTAdjO := (homeTeam.AdjO + (homeTeam.AdjO * .014))
-	hTAdjD := (homeTeam.AdjD - (homeTeam.AdjD * .014))
-	aTAdjO := (awayTeam.AdjO - (awayTeam.AdjO * .014))
-	aTAdjD := (awayTeam.AdjD + (awayTeam.AdjD * .014))
+	hTAdjO := (homeTeam.AdjO + (homeTeam.AdjO * .016))
+	hTAdjD := (homeTeam.AdjD - (homeTeam.AdjD * .016))
+	aTAdjO := (awayTeam.AdjO - (awayTeam.AdjO * .016))
+	aTAdjD := (awayTeam.AdjD + (awayTeam.AdjD * .016))
+	// hTAdjO := ((homeTeam.AdjO) / 101.5)
+	// hTAdjD := ((homeTeam.AdjD) / 101.5)
+	// aTAdjO := ((awayTeam.AdjO) / 101.5)
+	// aTAdjD := ((awayTeam.AdjD) / 101.5)
 
 	hTEw := (math.Pow(hTAdjO, 11.5) / ((math.Pow(hTAdjO, 11.5)) + math.Pow(hTAdjD, 11.5)))
 	aTEw := (math.Pow(aTAdjO, 11.5) / ((math.Pow(aTAdjO, 11.5)) + math.Pow(aTAdjD, 11.5)))
@@ -70,22 +68,32 @@ func CalculateLog5KpWinProb(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTea
 }
 
 func CalculateLog5KpSpread(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
-	hTAdjO := ((homeTeam.AdjO + (homeTeam.AdjO * .014)) / 101.5)
-	hTAdjD := ((homeTeam.AdjD - (homeTeam.AdjD * .014)) / 101.5)
-	aTAdjO := ((awayTeam.AdjO - (awayTeam.AdjO * .014)) / 101.5)
-	aTAdjD := ((awayTeam.AdjD + (awayTeam.AdjD * .014)) / 101.5)
+	hTAdjO := ((homeTeam.AdjO + (homeTeam.AdjO * .016)) / 101.5)
+	hTAdjD := ((homeTeam.AdjD - (homeTeam.AdjD * .016)) / 101.5)
+	aTAdjO := ((awayTeam.AdjO - (awayTeam.AdjO * .016)) / 101.5)
+	aTAdjD := ((awayTeam.AdjD + (awayTeam.AdjD * .016)) / 101.5)
 
-	htExOp := (hTAdjO * aTAdjD * 101.5 * .697)
-	atExOp := (aTAdjO * hTAdjD * 101.5 * .697)
+	// hTAdjO := ((homeTeam.AdjO) / 101.5)
+	// hTAdjD := ((homeTeam.AdjD) / 101.5)
+	// aTAdjO := ((awayTeam.AdjO) / 101.5)
+	// aTAdjD := ((awayTeam.AdjD) / 101.5)
+
+	eTempo := (homeTeam.AdjT / 68.1) * (awayTeam.AdjT / 68.1) * 68.1
+	htExOp := (hTAdjO * aTAdjD * 101.5 * (eTempo / 100))
+	atExOp := (aTAdjO * hTAdjD * 101.5 * (eTempo / 100))
 
 	return (htExOp - atExOp), (atExOp - htExOp)
 }
 
 func BDDistSpread(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
-	hTAdjO := (homeTeam.AdjO + (homeTeam.AdjO * .014))
-	hTAdjD := (homeTeam.AdjD - (homeTeam.AdjD * .014))
-	aTAdjO := (awayTeam.AdjO - (awayTeam.AdjO * .014))
-	aTAdjD := (awayTeam.AdjD + (awayTeam.AdjD * .014))
+	// hTAdjO := (homeTeam.AdjO + (homeTeam.AdjO * .014))
+	// hTAdjD := (homeTeam.AdjD - (homeTeam.AdjD * .014))
+	// aTAdjO := (awayTeam.AdjO - (awayTeam.AdjO * .014))
+	// aTAdjD := (awayTeam.AdjD + (awayTeam.AdjD * .014))
+	hTAdjO := (homeTeam.AdjO)
+	hTAdjD := (homeTeam.AdjD)
+	aTAdjO := (awayTeam.AdjO)
+	aTAdjD := (awayTeam.AdjD)
 
 	poss := (homeTeam.AdjT * awayTeam.AdjT) / 70
 

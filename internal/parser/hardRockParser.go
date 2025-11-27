@@ -22,8 +22,8 @@ func HrParser() ([]GameInfo, error) {
 	awayTeamPattern := `<div class="show-for-medsmall">\d*\s*(.*?)</div>`
 	homeTeamPattern := `<div class="show-for-medsmall">\d*\s*(.*?)</div>`
 	spreadPattern := `<div class="column selection-line-value small-24 xxlarge-expand">\s*([+-]?\d+(\.\d+)?)\s*</div>`
-	overUnderPattern := `<div class="row selection-container selection-container-vertical " data-cy="wager-button:Total Points (Over|Under)" data-tooltip-id="\d+-\d+"><div class="column selection-line-value small-24 xxlarge-expand">\s*[OU]\s*(\d+(\.\d+)?)\s*</div><div class="column selection-odds xxlarge-13 ">(-?\d+)</div></div>`
-	moneyLinePattern := `<div class="row selection-container selection-container-vertical " data-cy="wager-button:To Win [AB]" data-tooltip-id="\d+-\d+"><div class="column selection-odds small-24 center-text">([+-]?\d+)</div></div>`
+	overUnderPattern := `<div class="row selection-container selection-container-vertical " data-qa="wager-button:Total Points (Over|Under)" data-tooltip-id="\d+-\d+"><div class="column selection-line-value small-24 xxlarge-expand">\s*[OU]\s*(\d+(\.\d+)?)\s*</div><div class="column selection-odds xxlarge-13 ">(-?\d+)</div></div>`
+	moneyLinePattern := `<div class="row selection-container selection-container-vertical " data-qa="wager-button:To Win [AB]" data-tooltip-id="\d+-\d+"><div class="column selection-odds small-24 center-text">([+-]?\d+)</div></div>`
 
 	games := make([]GameInfo, 0)
 	// Extract information from each instance
