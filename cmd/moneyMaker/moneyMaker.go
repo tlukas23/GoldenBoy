@@ -11,7 +11,7 @@ import (
 
 const (
 	StyleLightGreen = iota
-	StyleDarkGreen
+	Yellow
 	StyleWhite
 )
 
@@ -93,7 +93,7 @@ func main() {
 		kpSpread := row.AddCell()
 		kpSpread.SetValue(rowData.KpSpread)
 		if rowData.KpSpread < 0 && rowData.VegasSpread > 0 || rowData.KpSpread > 0 && rowData.VegasSpread < 0 {
-			style = styleCell(i, false, StyleDarkGreen)
+			style = styleCell(i, false, Yellow)
 		} else if rowData.KpSpread > rowData.VegasSpread+3.5 || rowData.KpSpread < rowData.VegasSpread-3.5 {
 			style = styleCell(i, false, StyleLightGreen)
 		} else {
@@ -104,7 +104,7 @@ func main() {
 		log5Spread := row.AddCell()
 		log5Spread.SetValue(rowData.Log5Spread)
 		if rowData.Log5Spread < 0 && rowData.VegasSpread > 0 || rowData.Log5Spread > 0 && rowData.VegasSpread < 0 {
-			style = styleCell(i, false, StyleDarkGreen)
+			style = styleCell(i, false, Yellow)
 		} else if rowData.Log5Spread > rowData.VegasSpread+5.5 || rowData.Log5Spread < rowData.VegasSpread-5.5 {
 			style = styleCell(i, false, StyleLightGreen)
 		} else {
@@ -114,7 +114,7 @@ func main() {
 
 		log5Predi := row.AddCell()
 		log5Predi.SetValue(rowData.Log5PredictedTotal)
-		if rowData.Log5PredictedTotal > rowData.VegasOverUnder+8 || rowData.Log5PredictedTotal < rowData.VegasOverUnder-8 {
+		if rowData.Log5PredictedTotal > rowData.VegasOverUnder+6 || rowData.Log5PredictedTotal < rowData.VegasOverUnder-6 {
 			style = styleCell(i, true, StyleLightGreen)
 		} else {
 			style = styleCell(i, true, StyleWhite)
@@ -167,7 +167,7 @@ func styleCell(i int, colLine bool, colorCell int) *xlsx.Style {
 	switch colorCell {
 	case StyleLightGreen:
 		style.Fill = *xlsx.FillGreen
-	case StyleDarkGreen:
+	case Yellow:
 		style.Fill = *xlsx.FillGreen
 		style.Fill.FgColor = "FFFFD966"
 	}

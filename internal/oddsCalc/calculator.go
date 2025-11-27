@@ -5,10 +5,6 @@ import (
 	"tommy2thicc/internal/schemas"
 )
 
-func CalcPotentialPayout(odd int, wagerAmount float64) float64 {
-	return (calculateDecimalOdds(odd) * wagerAmount) - wagerAmount
-}
-
 func HouseProbs(odd1 int, odd2 int) (float64, float64) {
 	houseProb1 := calculateHouseProbability(odd1)
 	houseProb2 := calculateHouseProbability(odd2)
@@ -17,10 +13,6 @@ func HouseProbs(odd1 int, odd2 int) (float64, float64) {
 	realProb2 := houseProb2 / (houseProb1 + houseProb2)
 
 	return realProb1, realProb2
-}
-
-func ExpectedValFunc(prob float64, payout float64, wagerAmount float64) float64 {
-	return ((prob * payout) - ((1 - prob) * wagerAmount))
 }
 
 func calculateHouseProbability(odds int) float64 {
@@ -43,10 +35,6 @@ func CalculateKPPointDiff(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamS
 	aTpointDiff := ((awayTeam.Adjem - homeTeam.Adjem) * (awayTeam.AdjT + homeTeam.AdjT)) / 200
 
 	return hTpointDiff, aTpointDiff
-}
-
-func CalculateKPWinProb(marginDiff float64) float64 {
-	return (.5) * (1 + math.Erf((marginDiff)/(11*math.Sqrt(2))))
 }
 
 func CalculateLog5KpWinProb(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (float64, float64) {
@@ -95,7 +83,7 @@ func BDDistSpread(homeTeam schemas.KPTeamStats, awayTeam schemas.KPTeamStats) (f
 	aTAdjO := (awayTeam.AdjO)
 	aTAdjD := (awayTeam.AdjD)
 
-	poss := (homeTeam.AdjT * awayTeam.AdjT) / 70
+	poss := (homeTeam.AdjT * awayTeam.AdjT) / 72.4
 
 	htPPP := (hTAdjO * aTAdjD) / 101.5
 	atPPP := (aTAdjO * hTAdjD) / 101.5
